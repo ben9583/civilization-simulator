@@ -52,6 +52,7 @@ public class Scene extends JComponent {
 		return this.hexes.get((int)(Math.random() * this.hexes.size()));
 	}
 
+
 	public Hex getHexAt(SceneVector location) {
 		for(int i = 0; i < this.hexes.size(); i++) {
 			if(this.hexes.get(i).getX() == location.x && this.hexes.get(i).getY() == location.y) {
@@ -75,6 +76,12 @@ public class Scene extends JComponent {
 		this.hexes.add(h);
 	}
 
+	public void colorHexes() {
+		for(int i = 0; i < this.hexes.size(); i++) {
+			this.hexes.get(i).updateColor();
+		}
+	}
+
 	//Paints scene to the frame
 	@Override
 	public void paintComponent(Graphics g) {
@@ -95,11 +102,6 @@ public class Scene extends JComponent {
 				//g2.setColor(new Color(0, 0, 0));
 				//g2.draw(h.getBounds2D());
 			}
-
-			/*
-			g2.setColor(new Color(255, 255, 255));
-			g2.fillRect(1150, 0, 216, 768);
-			*/
 		}
 	}
 }

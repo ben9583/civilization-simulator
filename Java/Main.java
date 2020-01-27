@@ -45,7 +45,8 @@ public class Main {
 	public static final long SEED = System.currentTimeMillis();
 	public static final int DISPLACEMENT = (int)(Math.random() * 100000);
 	public static final double CONTINENT_ROUGHNESS = 0.5;
-	public static final double WATER_WORLD = 0.5;
+	public static final double WATER_WORLD = 0.3;
+	public static final int INITIAL_EMPIRES = 8;
 
 	//Game Preferences
 	public static final int DEFAULT_PEACE_DURATION = 15;
@@ -54,6 +55,8 @@ public class Main {
 	public static long TICK = 0;
 	public static ArrayList<Empire> empires = new ArrayList<Empire>();
 	public static int COUNT = 1;
+	public static JFrame frame;
+	public static Scene scene;
 
 	public static void processTick() {
 		for(int i = 0; i < Main.empires.size(); i++) {
@@ -74,12 +77,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		//1. Create the frame.
-		JFrame frame = new JFrame("hello");
+		frame = new JFrame("hello");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1366, 718);
+
+		Thread toolTipThread = new Thread(new ToolTipThread());
+		toolTipThread.start();
 
 		//2. Create a scene and add hexes.
-		Scene scene = new Scene();
+		scene = new Scene();
 		Color white = new Color(200, 200, 200);
 		OpenSimplexNoise noiseGen = new OpenSimplexNoise(SEED);
 
@@ -97,7 +102,7 @@ public class Main {
 			}
 		}
 
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < Main.INITIAL_EMPIRES; i++) {
 			Hex h = scene.getRandomHex();
 			if(h.getEmpire() == null) {
 				Empire emp = new Empire("Empire " + Main.COUNT, scene.getRandomHex());
@@ -108,7 +113,11 @@ public class Main {
 		}
 
 		//3. Add the scene to the frame and show it.
+		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(scene);
+		scene.setBounds(0, 0, 1366, 768);
+
+		frame.setSize(1366, 718);
 		frame.setVisible(true);
 
 		System.out.println("hi");
@@ -120,6 +129,7 @@ public class Main {
 			}
 
 			processTick();
+			scene.colorHexes();
 			frame.revalidate();
 			frame.repaint();
 		}

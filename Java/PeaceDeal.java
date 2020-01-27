@@ -33,12 +33,14 @@ public class PeaceDeal extends DiploObject {
 		this.duration = duration;
 	}
 
-	public void checkExpiration() {
+	public boolean checkExpiration() {
 		if(Main.TICK > super.tick + this.duration) {
 			for(int i = 0; i < Main.empires.size(); i++) {
 				Main.empires.get(i).removePeaceDeal(this);
 			}
-			System.out.println("Peace deal between " + super.t0 + " and " + super.t1 + " has expired");
+			System.out.println("Peace deal between " + super.t0.name + " and " + super.t1.name + " has expired");
+			return true;
 		}
+		return false;
 	}
 }

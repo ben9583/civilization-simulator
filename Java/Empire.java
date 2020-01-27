@@ -121,7 +121,7 @@ public class Empire {
 	}
 
 	public void launchCampaign(WarDeclaration war) {
-		this.economy = (int)((double)this.economy * 0.97);
+		this.economy = (int)Math.max((double)this.economy * 0.97, this.economy - 500);
 		Empire other;
 		if(war.t0 == this) {
 			other = war.t1;
@@ -130,11 +130,6 @@ public class Empire {
 			if(war.t1 != this) {
 				System.out.println("campaign launched by " + this.name + ", who is not in the war? (" + war.t0.name + " v. " + war.t1.name);
 			}
-		}
-
-		if(Math.random() * (Main.TICK - war.tick) > 25) {
-			war.makePeace(Main.DEFAULT_PEACE_DURATION);
-			return;
 		}
 
 		double econAdvantage = Math.min((double)this.economy / (other.getEconomy() + 1), 9);
@@ -168,12 +163,20 @@ public class Empire {
 					}
 				}
 			}
+
+			if(Math.random() * (Main.TICK - war.tick) > 25) {
+				war.makePeace(Main.DEFAULT_PEACE_DURATION);
+				return;
+			}
 		}
 	}
 
 	public void coordinateWars() {
 		for(int i = 0; i < this.wars.size(); i++) {
 			this.launchCampaign(this.wars.get(i));
+		}
+		for(int i = 0; i < this.peaceDeals.size(); i++) {
+			this.peaceDeals.get(i).checkExpiration();
 		}
 	}
 
@@ -421,6 +424,10 @@ public class Empire {
 		}
 
 		System.out.println("wasn\'t in the list lmao");
+	}
+
+	public ArrayList<WarDeclaration> getWars() {
+		return this.wars;
 	}
 
 	public int getEconomy() {

@@ -53,6 +53,6 @@ public class WarDeclaration extends DiploObject {
 		t0.removeWarDeclaration(this);
 		t1.removeWarDeclaration(this);
 
-		System.out.println("Peace has been made between " + super.t0 + " and  " + super.t1);
+		System.out.println("Peace has been made between " + super.t0.name + " and  " + super.t1.name);
 	}
 }

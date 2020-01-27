@@ -36,6 +36,7 @@ public class Hex extends Polygon {
 	private final int width;
 	private final Scene scene;
 	private Color color;
+	private Color savedColor;
 
 	private Empire empire;
 	private Empire occupier;
@@ -61,6 +62,7 @@ public class Hex extends Polygon {
 		this.y = (y - Main.Y_PADDING) / Main.Y_UNIT_LENGTH;
 		this.width = width;
 		this.color = color;
+		this.savedColor = color;
 		this.empire = null;
 		this.isClustered = false;
 	}
@@ -93,6 +95,7 @@ public class Hex extends Polygon {
 		this.y = (y - Main.Y_PADDING) / Main.Y_UNIT_LENGTH;
 		this.width = width;
 		this.color = color;
+		this.savedColor = color;
 		this.empire = null;
 		this.isClustered = false;
 	}
@@ -125,6 +128,7 @@ public class Hex extends Polygon {
 		this.y = (y - Main.Y_PADDING) / Main.Y_UNIT_LENGTH;
 		this.width = Main.HEX_WIDTH;
 		this.color = color;
+		this.savedColor = color;
 		this.empire = null;
 		this.isClustered = false;
 	}
@@ -206,11 +210,15 @@ public class Hex extends Polygon {
 	}
 
 	public void setColor(Color color) {
-		this.color = color;
+		this.savedColor = color;
 	}
 
 	public Color getColor() {
 		return this.color;
+	}
+
+	public void updateColor() {
+		this.color = this.savedColor;
 	}
 
 	public void setEmpire(Empire empire) {
