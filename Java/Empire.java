@@ -43,6 +43,46 @@ public class Empire {
 	private int economy;
 	private double stability;
 
+	public Empire(Hex capital) {
+		this.name = "Empire " + Main.COUNT;
+		this.capital = capital;
+		this.foundingTick = Main.TICK;
+		this.hexList = new HexList();
+		this.occupiedTiles = new HexList();
+		this.borderEmpires = new ArrayList<Empire>();
+		this.wars = new ArrayList<WarDeclaration>();
+		this.peaceDeals = new ArrayList<PeaceDeal>();
+		this.economy = 100;
+		this.stability = 0.0;
+
+		this.annexTile(capital);
+		this.capital.setColor(new Color(0, 0, 0));
+
+		boolean isGood = false;
+		Color co = new Color(0, 0, 0);
+		while(!isGood) {
+			int r = (int)(Math.random() * 70) + 15;
+			int g = (int)(Math.random() * 70) + 15;
+			int b = (int)(Math.random() * 70) + 15;
+
+			if(Main.empires.size() == 0) {
+				isGood = true;
+				co = new Color(r, g, b);
+			}
+
+			for(int i = 0; i < Main.empires.size(); i++) {
+				if(Math.abs(Main.empires.get(i).color.getRed() - r) + Math.abs(Main.empires.get(i).color.getGreen() - g) + Math.abs(Main.empires.get(i).color.getBlue() - b) > 15) {
+					isGood = true;
+					co = new Color(r, g, b);
+				}
+			}
+		}
+
+		this.color = co;
+
+		Main.COUNT++;
+	}
+
 	public Empire(String name, Hex capital) {
 		this.name = name;
 		this.capital = capital;
@@ -107,8 +147,6 @@ public class Empire {
 
 		if(this.economy > 500000) this.economy = 500000;
 		if(this.economy < 0) this.economy = 0;
-
-		System.out.println(this.name + ": " + this.economy);
 	}
 
 	public void declareWar(Empire other, boolean isRebellion, boolean isLiberation) {
@@ -141,7 +179,6 @@ public class Empire {
 			HexList surroundingTiles = controlledTiles.get(i).getSurroundingHexes();
 			for(int j = 0; j < surroundingTiles.size(); j++) {
 				if(surroundingTiles.get(j).isControlledBy(other)) {
-					//System.out.println(this.name + " ey");
 					int surrAdvantage = 0;
 
 					HexList surroundingTiles2ElectricBoogaloo = surroundingTiles.get(j).getSurroundingHexes();
@@ -152,7 +189,6 @@ public class Empire {
 					}
 
 					boolean rngBlessed = (Math.random() * (surrAdvantage + 1)) > 1;
-					//System.out.println(this.name + ": " + econAdvantage + ", " + surrAdvantage);
 					boolean takesTerritory = (war.isRebellion == false && rngBlessed && Math.random() * econAdvantage * 3 > 1) || (war.isRebellion == true && war.t0 == this && rngBlessed && Math.random() * 3 == 0) || (war.isRebellion == true && war.t1 == this && rngBlessed && Math.random() * 10 == 0);
 					if(takesTerritory) {
 						if(surroundingTiles.get(j).getEmpire() == this) {
@@ -225,8 +261,6 @@ public class Empire {
 					}
 				}
 
-				System.out.println(canWar);
-
 				if(canWar) {
 					this.declareWar(other, false, false);
 				}
@@ -268,6 +302,7 @@ public class Empire {
 			hexes = e.getOccupiedTiles(other);
 			if(hexes.size() != 0) {
 				for(int j = hexes.size() - 1; j >= 0; j--) {
+
 					e.annexTile(hexes.get(j));
 				}
 			}
@@ -318,6 +353,7 @@ public class Empire {
 		}
 
 		if(hex.getEmpire() != null) {
+			if(hex.getOccupier() != null) hex.getOccupier().unoccupyTile(hex);
 			hex.getEmpire().removeTileFromList(hex);
 		}
 
@@ -343,7 +379,7 @@ public class Empire {
 
 		occupiedTiles.add(hex);
 		hex.setOccupier(this);
-		hex.setColor(new Color(this.color.getRed() + 140, this.color.getGreen() + 140, this.color.getBlue() + 140));
+		hex.setColor(new Color(this.color.getRed() + 70, this.color.getGreen() + 70, this.color.getBlue() + 70));
 
 		if(hex.getEmpire().capital == hex) {
 			this.annexEmpire(hex.getEmpire());
@@ -387,6 +423,10 @@ public class Empire {
 		return this.hexList;
 	}
 
+	public HexList getOccupiedTiles() {
+		return this.occupiedTiles;
+	}
+
 	public HexList getOccupiedTiles(Empire other) {
 		HexList out = new HexList();
 
@@ -398,6 +438,7 @@ public class Empire {
 			}
 		}
 
+		//System.out.println(this.name + ": LEN " + out.size());
 		return out;
 	}
 
@@ -424,6 +465,17 @@ public class Empire {
 		}
 
 		System.out.println("wasn\'t in the list lmao");
+	}
+
+	public void removeTileFromOccupied(Hex hex) {
+		for(int i = 0; i < this.occupiedTiles.size(); i++) {
+			if(this.occupiedTiles.get(i) == hex) {
+				this.occupiedTiles.remove(i);
+				return;
+			}
+		}
+
+		System.out.println("wasn\'t occupied lmao");
 	}
 
 	public ArrayList<WarDeclaration> getWars() {

@@ -39,12 +39,64 @@ public class WarDeclaration extends DiploObject {
 		HexList occupiedByt0 = super.t0.getOccupiedTiles(super.t1);
 		HexList occupiedByt1 = super.t1.getOccupiedTiles(super.t0);
 
-		for(int i = 0; i < occupiedByt0.size(); i++) {
-			super.t0.annexTile(occupiedByt0.get(i));
+		for(int i = occupiedByt0.size() - 1; i >= 0; i--) {
+			//super.t0.annexTile(occupiedByt0.get(i));
+
+			HexList cluster = occupiedByt0.get(i).getCluster(this.t0);
+
+			if(cluster.get(0) == super.t0.capital) {
+				for(int j = 0; j < cluster.size(); j++) {
+					if(cluster.get(j).getEmpire() == t1) {
+						super.t0.annexTile(cluster.get(j));
+						occupiedByt0.remove(cluster.get(j));
+					}
+				}
+			} else if(cluster.size() < 11) {
+				for(int j = 0; j < cluster.size(); j++) {
+					super.t0.unoccupyTile(cluster.get(j));
+					occupiedByt0.remove(cluster.get(j));
+				}
+			} else {
+				Empire newEmpire = new Empire(cluster.getRandomHex());
+				for(int j = 0; j < cluster.size(); j++) {
+					if(cluster.get(j) != newEmpire.capital) {
+						newEmpire.annexTile(cluster.get(j));
+						occupiedByt0.remove(cluster.get(j));
+					}
+				}
+			}
+
+			i = occupiedByt0.size() - 1;
 		}
 
-		for(int i = 0; i < occupiedByt1.size(); i++) {
-			super.t1.annexTile(occupiedByt1.get(i));
+		for(int i = occupiedByt1.size() - 1; i >= 0; i--) {
+			//super.t0.annexTile(occupiedByt0.get(i));
+
+			HexList cluster = occupiedByt1.get(i).getCluster(this.t1);
+
+			if(cluster.get(0) == super.t1.capital) {
+				for(int j = 0; j < cluster.size(); j++) {
+					if(cluster.get(j).getEmpire() == t0) {
+						super.t1.annexTile(cluster.get(j));
+						occupiedByt1.remove(cluster.get(j));
+					}
+				}
+			} else if(cluster.size() < 11) {
+				for(int j = 0; j < cluster.size(); j++) {
+					super.t1.unoccupyTile(cluster.get(j));
+					occupiedByt1.remove(cluster.get(j));
+				}
+			} else {
+				Empire newEmpire = new Empire(cluster.getRandomHex());
+				for(int j = 0; j < cluster.size(); j++) {
+					if(cluster.get(j) != newEmpire.capital) {
+						newEmpire.annexTile(cluster.get(j));
+						occupiedByt1.remove(cluster.get(j));
+					}
+				}
+			}
+
+			i = occupiedByt1.size() - 1;
 		}
 
 		PeaceDeal peace = new PeaceDeal(super.t0, super.t1, peaceLength);

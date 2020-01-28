@@ -168,32 +168,45 @@ public class Hex extends Polygon {
 		return out;
 	}
 
-	public HexList getCluster() {
-		System.out.println("BEGIN CLUSTER FUNCTION");
+	public HexList getCluster(Empire includeThis) {
+		//System.out.println("----------------------");
+		//System.out.println("BEGIN CLUSTER FUNCTION");
+		//System.out.println("Original: [" + this.x + ", " + this.y + "]");
+		//System.out.println("include: " + includeThis.name);
 		HexList out = new HexList();
 		out.add(this);
 
 		for(int i = 0; i < out.size(); i++) {
 			HexList surroundingTiles = out.get(i).getSurroundingHexes();
-			System.out.println(surroundingTiles.size() + " surrounding tiles");
+			//System.out.println("This: [" + out.get(i).getX() + ", " + out.get(i).getY() + "]");
+			//System.out.println(surroundingTiles.size() + " surrounding tiles");
 			for(int j = 0; j < surroundingTiles.size(); j++) {
 				Hex thatTile = surroundingTiles.get(j);
-				if(!thatTile.isClustered && thatTile.getEmpire() == this.getEmpire() && thatTile.getOccupier() == this.getOccupier()) {
-					out.add(thatTile);
+				//System.out.println("Next: [" + thatTile.getX() + ", " + thatTile.getY() + "]");
+				//System.out.println("Capital: [" + this.getEmpire().capital.getX() + ", " + this.getEmpire().capital.getY() + "]");
+				if(!thatTile.isClustered && ((thatTile.getEmpire() == this.getEmpire() && thatTile.getOccupier() == this.getOccupier()) || (includeThis != null && (includeThis == thatTile.getEmpire() && thatTile.getOccupier() == null)))) {
 					thatTile.isClustered = true;
-					System.out.println("check");
+					//System.out.println("check");
+
+					if(thatTile == thatTile.getEmpire().capital) {
+						out.add(0, thatTile);
+						//System.out.println("Ooooh, found the capital!");
+					} else {
+						out.add(thatTile);
+					}
 				} else {
-					System.out.println("nope");
+					//System.out.println("nope");
 				}
 			}
 		}
 
-		System.out.println("Size: " + out.size());
+		//System.out.println("Size: " + out.size());
 		for(int i = 0; i < out.size(); i++) {
 			out.get(i).isClustered = false;
 		}
 
-		System.out.println("END CLUSTER FUNCTION");
+		//System.out.println("END CLUSTER FUNCTION");
+		//System.out.println("----------------------");
 		return out;
 	}
 

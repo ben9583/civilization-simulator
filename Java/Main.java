@@ -46,7 +46,7 @@ public class Main {
 	public static final int DISPLACEMENT = (int)(Math.random() * 100000);
 	public static final double CONTINENT_ROUGHNESS = 0.5;
 	public static final double WATER_WORLD = 0.3;
-	public static final int INITIAL_EMPIRES = 8;
+	public static final int INITIAL_EMPIRES = 16;
 
 	//Game Preferences
 	public static final int DEFAULT_PEACE_DURATION = 15;
@@ -105,7 +105,7 @@ public class Main {
 		for(int i = 0; i < Main.INITIAL_EMPIRES; i++) {
 			Hex h = scene.getRandomHex();
 			if(h.getEmpire() == null) {
-				Empire emp = new Empire("Empire " + Main.COUNT, scene.getRandomHex());
+				Empire emp = new Empire(scene.getRandomHex());
 				Main.empires.add(emp);
 
 				Main.COUNT++;

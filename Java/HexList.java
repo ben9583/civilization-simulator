@@ -39,4 +39,19 @@ public class HexList extends ArrayList<Hex> {
 	public HexList(ArrayList<Hex> hexes) {
 		super(hexes);
 	}
+
+	public boolean removeHex(Hex hex) {
+		for(int i = 0; i < super.size(); i++) {
+			if(hex == super.get(i)) {
+				super.remove(i);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public Hex getRandomHex() {
+		return super.get((int)(Math.random() * super.size()));
+	}
 }
