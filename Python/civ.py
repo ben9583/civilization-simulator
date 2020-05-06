@@ -641,13 +641,16 @@ def for_each_empire(emp):
 		if len(tiles) == 1:
 			surrounded = True
 			surroundings = get_surroundings(emp.capital)
-			surrounding_emp = surroundings[0].empire
-			for surr_hex in surroundings:
-				if surr_hex.empire != surrounding_emp:
-					surrounded = False
-					break
-			if surrounded == True:
-				partition_empire(emp, surrounding_emp)
+			if len(surroundings) == 0:
+				dissolve_empire(emp)
+			else:
+				surrounding_emp = surroundings[0].empire
+				for surr_hex in surroundings:
+					if surr_hex.empire != surrounding_emp:
+						surrounded = False
+						break
+				if surrounded == True:
+					partition_empire(emp, surrounding_emp)
 		if random.randint(min(round(emp.border_count / (1 + len(tiles))) * 200, 1000), 2000) == 2000:
 			print("%s collapsed!" % (emp.name))
 			dissolve_empire(emp)
