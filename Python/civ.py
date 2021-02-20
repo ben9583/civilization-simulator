@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 """
+import os
+import sys
 
 import pygame
 import pygame.gfxdraw
@@ -44,6 +46,24 @@ OCEAN_WORLD = 5
 INITIAL_EMPIRES = 16 #16
 PEACE_DURATION = 15
 ECONOMIC_ADVANTAGE = 2
+ENABLE_MULTITHREADING = True
+
+NUM_CORES = 1
+
+if ENABLE_MULTITHREADING:
+	if sys.platform.startswith('linux'):
+		stream = os.popen('grep -c ^processor /proc/cpuinfo')
+	elif sys.platform.startswith('win'):
+		stream = os.popen('echo %NUMBER_OF_PROCESSORS%')
+	elif sys.platform.startswith('cygwin'):
+		stream = os.popen('echo %NUMBER_OF_PROCESSORS%')
+	elif sys.platform.startswith('msys'):
+		stream = os.popen('echo %NUMBER_OF_PROCESSORS%')
+	elif sys.platform.startswith('darwin'):
+		stream = os.popen('sysctl -n hw.ncpu')
+
+	output = stream.read()
+	NUM_CORES = int(output[:len(output) - 1])
 
 global emp_count, game_tick
 
@@ -628,8 +648,9 @@ def for_each_empire(emp):
 			expanded = False
 			for hexagon in reversed(tiles):
 				surroundings = get_surroundings(hexagon)
+				#print(emp.economy)
 				for surr_hex in surroundings:
-					if surr_hex.empire is None and surr_hex.occupier is None:
+					if surr_hex.empire is None and surr_hex.occupier is None and random.randint(0, 10) < math.log10(emp.economy) - 2:
 						annex_tile(emp, surr_hex)
 						tiles.append(hexagon)
 						expanded = True
