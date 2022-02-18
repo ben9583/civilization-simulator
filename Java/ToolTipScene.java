@@ -41,12 +41,12 @@ public class ToolTipScene extends JComponent {
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 			Point mouse = MouseInfo.getPointerInfo().getLocation();
-			int x = (mouse.x - Main.X_PADDING + Main.X_UNIT_LENGTH / 4) / Main.X_UNIT_LENGTH;
-			int y = (mouse.y - 45 - Main.Y_PADDING + (((mouse.x - Main.X_PADDING + Main.X_UNIT_LENGTH / 4) / Main.X_UNIT_LENGTH) % 2 == 0 ? 0 : Main.Y_UNIT_LENGTH / 4)) / Main.Y_UNIT_LENGTH;
+			int x = (mouse.x - 2 - Main.X_PADDING + Main.X_UNIT_LENGTH / 4) / Main.X_UNIT_LENGTH;
+			int y = (mouse.y - 55 - Main.Y_PADDING + (((mouse.x - Main.X_PADDING + Main.X_UNIT_LENGTH / 4) / Main.X_UNIT_LENGTH) % 2 == 0 ? 0 : Main.Y_UNIT_LENGTH / 4)) / Main.Y_UNIT_LENGTH;
 			SceneVector location = new SceneVector(x, y);
 			Hex hex = Main.scene.getHexAt(location);
 			g2.setColor(new Color(255, 255, 0));
-			g2.fillRect(mouse.x, mouse.y - 45, 5, 5);
+			g2.fillRect(mouse.x - 2, mouse.y - 55, 5, 5);
 			if(hex != null) {
 				g2.setColor(new Color(150, 150, 150));
 				g2.fillRect(mouse.x, mouse.y, 200, 150);
