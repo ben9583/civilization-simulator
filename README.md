@@ -1,6 +1,8 @@
 # Civilization Simulator (civ)
 A Civilization Simulator coded in Python (pygame) and Java.
 
+![output](https://user-images.githubusercontent.com/16968917/159137594-78944715-3e5c-48d7-a401-6cd51ac3bc7b.gif)
+
 ## Description
 
 Originally programmed in RBLX Lua, this zero-player game features random terrain generation and AI empires that fight with each other to become the dominant empire in a hex-based world. The game has been carefully balanced as to let no one empire become dominant and stop the game (Roman Empire scenario) or many tiny empires, if you can call them such, that are essentially city-states in constant flux (Holy Roman Empire scenario). Instead, empires vary in size, power, and lasting on the global scale (even without empire-specific modifiers, yet!).
